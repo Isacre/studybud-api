@@ -5,6 +5,9 @@ from environ import Env
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
 
 env = Env()
 env.read_env()
@@ -44,8 +47,30 @@ INSTALLED_APPS = [
 
 AUTH_USER_MODEL = "users.UserAccount"
 DJOSER = {
-    'LOGIN_FIELD': 'email'
+    'LOGIN_FIELD': 'email',
+    'USER_ID_FIELD': 'email',
+    'SERIALIZERS': {
+        'user_create': 'base.serializers.user_serializer.CreateUserSerializer',
+        'current_user': 'base.serializers.user_serializer.CustomUserSerializer',
+    },
+    'SEND_ACTIVATION_EMAIL': False,
+    'ACTIVATION_URL': '/activate/{uid}/{token}',
+    'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
+    'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
 }
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'testejohndoe01@gmail.com'
+EMAIL_HOST_PASSWORD = 'ximk iyjr twxs styq'
+EMAIL_USE_TLS = True
+
+
+
+
+
+
 
 
 MIDDLEWARE = [
@@ -117,10 +142,9 @@ REST_FRAMEWORK = {
 
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=10),
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=6),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=90),
     "ROTATE_REFRESH_TOKENS": True,
-    "BLACKLIST_AFTER_ROTATION": True,
     "UPDATE_LAST_LOGIN": False,
     "ALGORITHM": "HS256",
     "VERIFYING_KEY": "",
@@ -147,6 +171,20 @@ SIMPLE_JWT = {
     "TOKEN_BLACKLIST_SERIALIZER": "rest_framework_simplejwt.serializers.TokenBlacklistSerializer",
     "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
+}
+
+SWAGGER_SETTINGS = {
+    "USE_SESSION_AUTH": False,
+    "PERSIST_AUTH": True,
+    "DEFAULT_MODEL_DEPTH": 3,
+    "SECURITY_DEFINITIONS": {
+        "JWT": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header",
+            "description": "Enter your JWT token in the format **JWT &lt;token>**",
+        }
+    },
 }
 
 # Internationalization

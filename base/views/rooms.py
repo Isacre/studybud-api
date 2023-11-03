@@ -38,3 +38,5 @@ class RoomsViewset(viewsets.ModelViewSet):
         return JsonResponse(RoomSerializer(room).data)
 
 
+
+
