@@ -23,10 +23,16 @@ class UserAccountManager(BaseUserManager):
 
         return self._create_user(email, password, **extra_fields)
 
+    def create_superuser(self, email, password, **extra_fields):
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
+        extra_fields.setdefault("is_active", True)
+
+        return self._create_user(email, password, **extra_fields)
 
 class UserAccount(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=255, blank=False)
-    picture = models.ImageField(null=True, blank=True, default='defaultUser.jpg')
+    picture = models.ImageField(null=True, blank=True, upload_to='media/', default='defaultUser.jpg')
     email = models.EmailField(max_length=255, unique=True)
     is_staff = models.BooleanField(
         default=False,

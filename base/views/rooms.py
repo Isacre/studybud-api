@@ -28,8 +28,12 @@ class RoomsViewset(viewsets.ModelViewSet):
     
     def list(self, request):
         queryset = self.filter_queryset(self.get_queryset()).order_by('created_at')
-        serialized_rooms = RoomSerializer(queryset, many=True)
-        return JsonResponse(serialized_rooms.data, safe=False)
+        
+        # Use pagination to get a paginated queryset
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serialized_rooms = RoomSerializer(page, many=True).data
+            return self.get_paginated_response(serialized_rooms)
     
     @action(methods=['GET'], detail=True)
     def retrieve_room(self, request, **kwargs):
