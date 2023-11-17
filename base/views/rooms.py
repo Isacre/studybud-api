@@ -27,7 +27,7 @@ class RoomsViewset(viewsets.ModelViewSet):
         return Response(serialized_data.errors, status.HTTP_400_BAD_REQUEST)
     
     def list(self, request):
-        queryset = self.filter_queryset(self.get_queryset()).order_by('created_at')
+        queryset = self.filter_queryset(self.get_queryset()).order_by('-created_at')
         
         # Use pagination to get a paginated queryset
         page = self.paginate_queryset(queryset)
